@@ -59,6 +59,7 @@ emotion_mode = False
 zoom_mode = False
 zoom_factor = 1.0
 max_zoom = 3.0
+full_screen_mode = True  # Start in full screen mode
 
 # Variables for motion detection
 prev_frame = None
@@ -383,7 +384,8 @@ while True:
         f"Age/Gender: {'ON' if age_gender_mode else 'OFF'} | Emotion: {'ON' if emotion_mode else 'OFF'}",
         f"Motion: {'ON' if motion_detection else 'OFF'} | Tracking: {'ON' if face_tracking else 'OFF'}",
         f"Edges: {'ON' if edge_detection else 'OFF'} | Night: {'ON' if night_mode else 'OFF'}",
-        f"Zoom: {'ON' if zoom_mode else 'OFF'} (x{zoom_factor:.1f}) | Mirror: {'ON' if mirror_mode else 'OFF'}"
+        f"Zoom: {'ON' if zoom_mode else 'OFF'} (x{zoom_factor:.1f}) | Mirror: {'ON' if mirror_mode else 'OFF'}",
+        f"Full Screen: {'ON' if full_screen_mode else 'OFF'} (F11 to toggle)"
     ]
     
     for i, line in enumerate(mode_lines):
@@ -406,6 +408,8 @@ while True:
     
     # Show the frame
     cv2.imshow("Advanced Face Detection", video_data)
+    if full_screen_mode:
+        cv2.setWindowProperty("Advanced Face Detection", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     
     # Key controls
     key = cv2.waitKey(10)
@@ -479,6 +483,11 @@ while True:
     elif key == ord("5"):  # Decrease night contrast
         night_contrast = max(-100, night_contrast - 5)
         print(f"Night contrast: {night_contrast}")
+    elif key == 194:  # F11 key to toggle full screen
+        full_screen_mode = not full_screen_mode
+        cv2.setWindowProperty("Advanced Face Detection", cv2.WND_PROP_FULLSCREEN, 
+                             cv2.WINDOW_FULLSCREEN if full_screen_mode else cv2.WINDOW_NORMAL)
+        print(f"Full screen mode: {'ON' if full_screen_mode else 'OFF'}")
     elif key == ord("h"):  # Help menu
         print("\n=== Key Controls ===")
         print("a - Exit")
@@ -499,6 +508,7 @@ while True:
         print("1 - Toggle mirror mode")
         print("2/3 - Adjust night brightness")
         print("4/5 - Adjust night contrast")
+        print("F11 - Toggle full screen")
         print("h - Show this help menu\n")
 
 # Release resources
